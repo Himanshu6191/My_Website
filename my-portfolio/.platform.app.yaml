@@ -1,0 +1,23 @@
+name: "my-portfolio"
+type:  "python:3.10"
+
+relationships:
+  database: "db:postgresql"
+
+# The configuration for the web process.
+web:
+  upstream:
+    socket_family: "unix"
+  commands:
+    start: "gunicorn -w 4 -b unix:$SOCKET my_portfolio.wsgi:application"
+  location:
+    "/":
+      passthrough: true
+    "/static/":
+      root: "static"
+      expires: 1h
+      allow: true
+
+#the size of the persistent disk for the database
+disk: 1024
+  
